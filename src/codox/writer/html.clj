@@ -188,8 +188,7 @@
     [:header
      [:section.title
       [:h1 (link-to "index.html" (h title))]]
-     [:section.project-version
-      [:span "Version: " (:version project)]]]))
+      [:small "Version: " (:version project)]]))
 
 (defn- index-page [project]
   (html5
@@ -198,19 +197,21 @@
     [:title (h (project-title project)) " API documentation"]]
    [:body
     (header project)
-    (namespaces-menu project)
-    [:div#content.namespace-index
-     [:h2 (h (project-title project))]
-     [:div.doc [:p (h (:description project))]]
-     (for [namespace (sort-by :name (:namespaces project))]
-       [:div.namespace
-        [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
-        [:div.doc (format-doc project nil (update-in namespace [:doc] util/summary))]
-        [:div.index
-         [:p "Public variables and functions:"]
-         (unordered-list
-          (for [var (sorted-public-vars namespace)]
-            (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]))
+    [:section.container
+     (namespaces-menu project)
+     [:section#content.namespace-index
+      [:section.title-container
+       [:h2 (h (:name project))]
+       [:div.doc [:p (h (:description project))]]]
+      (for [namespace (sort-by :name (:namespaces project))]
+        [:div.namespace
+         [:h3 (link-to (ns-filename namespace) (h (:name namespace)))]
+         [:div.doc (format-doc project nil (update-in namespace [:doc] util/summary))]
+         [:div.index
+          [:p "Public variables and functions:"]
+          (unordered-list
+           (for [var (sorted-public-vars namespace)]
+             (list " " (link-to (var-uri namespace var) (h (:name var))) " ")))]])]]]))
 
 (defn- var-usage [var]
   (for [arglist (:arglists var)]
@@ -225,7 +226,9 @@
 
 (defn- var-docs [project namespace var]
   [:div.public.anchor {:id (h (var-id (:name var)))}
-   [:h3 (h (:name var))]
+   [:h3
+    (link-to (str "#" (var-id (:name var)))
+             (h (:name var)))]
    (if-not (= (:type var) :var)
      [:h4.type (name (:type var))])
    (if (:dynamic var)
@@ -253,10 +256,10 @@
     [:title (h (:name namespace)) " documentation"]]
    [:body
     (header project)
-    [:section.content
+    [:section.container
      (namespaces-menu project namespace)
-     (vars-menu namespace)
-     [:div#content.namespace-docs
+     ;; (vars-menu namespace)
+     [:section#content.namespace-docs
       [:h2#top.anchor (h (:name namespace))]
       (added-and-deprecated-docs namespace)
       [:div.doc (format-doc project nil namespace)]
