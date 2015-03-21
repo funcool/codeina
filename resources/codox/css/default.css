@@ -171,14 +171,15 @@ header h1 a {
    color: #33a;
 }
 
-.namespaces-docs h2 {
+.namespace-docs h2 {
     color: #7a2518;
 }
 
-.namespace-docs h3 {
+.namespace-docs h3 a {
     color: #ba3925;
     font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
     font-weight: 400;
+    text-decoration: none;
 }
 
 .namespace-index h3 a {
