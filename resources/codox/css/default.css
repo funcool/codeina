@@ -7,25 +7,23 @@ body {
     font-family: "Lato", Helvetica, Arial, sans-serif;
     font-weight: 300;
     color:#585858;
-    font-size: 16px;
+    font-size: 100%;
     margin: 0px;
 }
 
 pre, code {
    font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
    font-weight: 400;
-   /* font-family: "Anonymous Pro", Monospace; */
-   font-size: 16px;
-   /* margin: 15px 0; */
 }
 
-section.content {
+section.container {
     display: flex;
+    font-size: 100%;
 }
 
 h2 {
    font-weight: normal;
-   font-size: 28px;
+   font-size: 3em;
    padding: 10px 0 2px 0;
    margin: 0;
 }
@@ -38,22 +36,16 @@ header {
 header h1 {
    margin: 0;
    padding: 0;
-   font-size: 12pt;
+   /* font-size: 12pt; */
    font-weight: lighter;
    /* text-shadow: -1px -1px 0px #333; */
 }
 
 header h1 a {
    color: #333;
-   font-size: 32px;
+   /* font-size: 32px; */
    font-weight: 400;
    text-decoration: none;
-}
-
-header section.project-version {
-    font-style: italic;
-    font-size: 14px;
-    padding-left: 5px;
 }
 
 #content {
@@ -61,11 +53,13 @@ header section.project-version {
    background: #fff;
    color: #333;
    padding: 0 18px;
+   font-size: 1.3em;
 }
 
 #namespaces {
    border-right: solid 1px #cccccc;
-   width: 250px;
+   min-width: 200px;
+   padding-right: 15px;
 }
 
 #vars {
@@ -102,7 +96,7 @@ header section.project-version {
 
 .sidebar li a, .sidebar li .no-link {
     border-left: 3px solid transparent;
-    padding: 0 4px;
+    padding: 0 15px;
     white-space: nowrap;
 }
 
@@ -177,19 +171,21 @@ header section.project-version {
    color: #33a;
 }
 
-#content h2 {
-    font-size: 48px;
+.namespaces-docs h2 {
     color: #7a2518;
 }
 
-#content h3 {
-   font-size: 16px;
-   /* font-weight: bold; */
-   color: #ba3925;
-   /* font-size: 1.6875em; */
+.namespace-docs h3 {
+    color: #ba3925;
+    font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
+    font-weight: 400;
+}
 
-   font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
-   font-weight: 400;
+.namespace-index h3 a {
+    text-decoration: none;
+    color: #ba3925;
+    font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
+    font-weight: 300;
 }
 
 .public h3 {
@@ -236,7 +232,7 @@ header section.project-version {
 }
 
 #content .members .inner h3 {
-    font-size: 12pt;
+    /* font-size: 12pt; */
 }
 
 .members .public {
@@ -256,7 +252,6 @@ h4.added,
 h4.deprecated {
     float: left;
     margin: 3px 10px 15px 0;
-    font-size: 15px;
     font-weight: bold;
     font-variant: small-caps;
 }
@@ -265,9 +260,9 @@ h4.deprecated {
 .public h4.dynamic,
 .public h4.added,
 .public h4.deprecated {
-    font-size: 13px;
     font-weight: bold;
     margin: 3px 0 0 10px;
+    font-size: 0.7em;
 }
 
 .members h4.type,
@@ -293,7 +288,7 @@ h4.deprecated {
 }
 
 .namespace {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .namespace:last-child {
@@ -302,9 +297,7 @@ h4.deprecated {
 
 .index {
     padding: 0;
-    font-size: 80%;
     margin: 15px 0;
-    line-height: 16px;
 }
 
 .index * {
@@ -319,6 +312,14 @@ h4.deprecated {
     padding-right: 5px;
 }
 
+.index li a {
+    color: #333;
+    font-family: "Droid Sans Mono","DejaVu Sans Mono","Monospace",monospace;
+    font-size: 0.8em;
+    text-decoration: none;
+    font-weight: 300;
+}
+
 .index ul {
     padding-left: 0;
 }
@@ -327,7 +328,8 @@ h4.deprecated {
     display: block;
     color: #777;
     margin: 2px 0;
-    font-size: 12px;
+    font-size: 0.6em;
+    /* font-size: 12px; */
 }
 
 .usage code:first-child {
@@ -360,12 +362,12 @@ p {
 }
 
 .markdown {
-    line-height: 18px;
-    font-size: 16px;
+    /* line-height: 18px; */
+    /* font-size: 16px; */
 }
 
 .doc, .public, .namespace .index {
-    max-width: 680px;
+    max-width: 780px;
     overflow-x: visible;
 }
 
@@ -373,7 +375,7 @@ p {
     /* background: #f6f6f6; */
     border: 1px solid #e4e4e4;
     border-radius: 2px;
-    font-size: 14px;
+    /* font-size: 14px; */
     padding: 0px 3px;
 }
 
@@ -436,7 +438,7 @@ p {
 }
 
 .src-link a {
-    font-size: 70%;
+    /* font-size: 70%; */
     padding: 1px 4px;
     text-decoration: none;
     color: #5555bb;
