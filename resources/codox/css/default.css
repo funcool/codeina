@@ -262,8 +262,7 @@ h4.type,
 h4.dynamic,
 h4.added,
 h4.deprecated {
-    float: left;
-    margin: 3px 10px 15px 0;
+    margin: 3px 10px 10px 0;
     font-weight: bold;
     font-variant: small-caps;
 }
@@ -273,7 +272,7 @@ h4.deprecated {
 .public h4.added,
 .public h4.deprecated {
     font-weight: bold;
-    margin: 3px 0 0 10px;
+    /* margin: 3px 0 0 10px; */
     font-size: 0.7em;
 }
 
