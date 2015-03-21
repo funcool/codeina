@@ -22,7 +22,7 @@
 (defmulti format-doc
   "Format the docstring of a var or namespace into HTML."
   (fn [project ns var] (:doc/format var))
-  :default :plaintext)
+  :default :markdown)
 
 (defmethod format-doc :plaintext [_ _ metadata]
   [:pre.plaintext (add-anchors (h (:doc metadata)))])
