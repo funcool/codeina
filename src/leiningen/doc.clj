@@ -7,18 +7,18 @@
 
 (defn- get-options [project]
   (merge {:sources (:source-paths project ["src"])}
-         (-> project :codox)
+         (-> project :codeina)
          {:name (str/capitalize (:name project))}
          (select-keys project [:root :version :description])
-         (-> project :codox :project)))
+         (-> project :codeina :project)))
 
 (defn doc
   "Generate API documentation from source code."
   [project]
-  (let [project (if (get-in project [:profiles :codox])
-                  (project/merge-profiles project [:codox])
+  (let [project (if (get-in project [:profiles :codeina])
+                  (project/merge-profiles project [:codeina])
                   project)]
     (eval/eval-in-project project
-     `(codox.main/generate-docs
+     `(codeina.main/generate-docs
        (update-in '~(get-options project) [:src-uri-mapping] eval))
-     `(require 'codox.main))))
+     `(require 'codeina.main))))

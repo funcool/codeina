@@ -1,4 +1,4 @@
-(ns codox.writer.html
+(ns codeina.writer.html
   "Documentation writer that outputs HTML."
   (:use [hiccup core page element])
   (:import [java.net URLEncoder]
@@ -7,7 +7,7 @@
            [org.pegdown.ast WikiLinkNode])
   (:require [clojure.java.io :as io]
             [clojure.string :as str]
-            [codox.utils :as util]))
+            [codeina.utils :as util]))
 
 (defn- var-id [var]
   (str "var-" (-> var name URLEncoder/encode (str/replace "%" "."))))
@@ -288,9 +288,9 @@
   [project]
   (doto (:output-dir project)
     (mkdirs "css" "js")
-    (copy-resource "codox/css/default.css" "css/default.css")
-    (copy-resource "codox/js/jquery.min.js" "js/jquery.min.js")
-    (copy-resource "codox/js/page_effects.js" "js/page_effects.js")
+    (copy-resource "codeina/css/default.css" "css/default.css")
+    (copy-resource "codeina/js/jquery.min.js" "js/jquery.min.js")
+    (copy-resource "codeina/js/page_effects.js" "js/page_effects.js")
     (write-index project)
     (write-namespaces project))
   (println "Generated HTML docs in"

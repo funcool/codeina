@@ -1,7 +1,7 @@
-(ns codox.reader.clojure
+(ns codeina.reader.clojure
   "Read raw documentation information from Clojure source directory."
   (:import java.util.jar.JarFile)
-  (:use [codox.utils :only (assoc-some update-some correct-indent)])
+  (:use [codeina.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
             [clojure.tools.namespace :as ns]
             [clojure.string :as str]))

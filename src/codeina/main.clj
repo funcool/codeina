@@ -1,20 +1,20 @@
-(ns codox.main
+(ns codeina.main
   "Main namespace for generating documentation"
-  (:use [codox.utils :only (ns-filter add-source-paths)])
-  (:require [codox.reader.clojure :as clj]))
+  (:use [codeina.utils :only (ns-filter add-source-paths)])
+  (:require [codeina.reader.clojure :as clj]))
 
 (defn- writer [{:keys [writer]}]
-  (let [writer-sym (or writer 'codox.writer.html/write-docs)
+  (let [writer-sym (or writer 'codeina.writer.html/write-docs)
         writer-ns (symbol (namespace writer-sym))]
     (try
       (require writer-ns)
       (catch Exception e
         (throw
-         (Exception. (str "Could not load codox writer " writer-ns) e))))
+         (Exception. (str "Could not load codeina writer " writer-ns) e))))
     (if-let [writer (resolve writer-sym)]
       writer
       (throw
-         (Exception. (str "Could not resolve codox writer " writer-sym))))))
+         (Exception. (str "Could not resolve codeina writer " writer-sym))))))
 
 (defn- macro? [var]
   (= (:type var) :macro))
@@ -30,8 +30,8 @@
 
 (defn- cljs-read-namespaces [& paths]
   ;; require is here to allow Clojure 1.3 and 1.4 when not using ClojureScript
-  (require 'codox.reader.clojurescript)
-  (let [reader (find-var 'codox.reader.clojurescript/read-namespaces)]
+  (require 'codeina.reader.clojurescript)
+  (let [reader (find-var 'codeina.reader.clojurescript/read-namespaces)]
     (merge-namespaces
      (concat (apply reader paths)
              (apply read-macro-namespaces paths)))))

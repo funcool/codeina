@@ -1,6 +1,6 @@
-(defproject funcool/codox "0.1.0-SNAPSHOT"
+(defproject funcool/codeina "0.1.0-SNAPSHOT"
   :description "Generate documentation from Clojure source files"
-  :url "https://github.com/funcool/codox"
+  :url "https://github.com/funcool/codeina"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src"]
@@ -12,6 +12,5 @@
                  [leinjacker "0.4.2"]
                  [hiccup "1.0.5"]
                  [org.pegdown/pegdown "1.4.2"]]
-
   :jar-exclusions [#"\.swp|\.swo|user.clj"]
   :eval-in-leiningen true)
