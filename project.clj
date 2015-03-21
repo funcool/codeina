@@ -1,6 +1,6 @@
 (defproject funcool/codox "0.1.0-SNAPSHOT"
   :description "Generate documentation from Clojure source files"
-  :url "https://github.com/niwibe/codox"
+  :url "https://github.com/funcool/codox"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :source-paths ["src"]
