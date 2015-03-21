@@ -177,9 +177,7 @@
 (def ^{:private true} default-includes
   (list
    [:meta {:charset "UTF-8"}]
-   (include-css "css/default.css")
-   (include-js "js/jquery.min.js")))
-   ;; (include-js "js/page_effects.js")))
+   (include-css "css/default.css")))
 
 (defn- project-title [project]
   (str (:name project) " " (:version project)))
