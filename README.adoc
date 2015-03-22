@@ -1,0 +1,30 @@
+= Codeína
+
+A tool for generate beatiful api documentation for clojure and clojurescript.
+
+== Quick Start
+
+Include the following plugin in your project.clj file or your global profile:
+
+[source,clojure]
+----
+:plugins [[funcool/codeina "0.1.0-SNAPSHOT"
+           :exclusions [org.clojure/clojure]]]
+----
+
+Put the initial configuration specifying to _codeina_ the location
+of your sources and the language:
+
+[source,clojure]
+----
+:codeina {:sources ["src"]
+          :language :clojure}
+----
+
+And run the `doc` lein subcommand:
+
+[source,shell]
+----
+$ len doc
+Generated HTML docs in /path/to/you/project/doc
+----
