@@ -18,7 +18,8 @@
   (let [project (if (get-in project [:profiles :codeina])
                   (project/merge-profiles project [:codeina])
                   project)]
-    (eval/eval-in-project project
+    (eval/eval-in-project
+     (deps/add-if-missing project '[funcool/codeina "0.1.0-SNAPSHOT"])
      `(codeina.main/generate-docs
        (update-in '~(get-options project) [:src-uri-mapping] eval))
      `(require 'codeina.main))))
