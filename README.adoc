@@ -27,6 +27,6 @@ And run the `doc` lein subcommand:
 
 [source,shell]
 ----
-$ len doc
+$ lein doc
 Generated HTML docs in /path/to/you/project/doc
 ----
