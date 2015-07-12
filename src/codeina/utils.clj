@@ -6,11 +6,11 @@
 (defn assoc-some
   "Associates a key with a value in a map, if and only if the value is not nil."
   ([m k v]
-     (if (nil? v) m (assoc m k v)))
+   (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
-     (reduce (fn [m [k v]] (assoc-some m k v))
-             (assoc-some m k v)
-             (partition 2 kvs))))
+   (reduce (fn [m [k v]] (assoc-some m k v))
+           (assoc-some m k v)
+           (partition 2 kvs))))
 
 (defn update-some
   "Updates a key in a map with a function, if and only if the return value from
@@ -43,12 +43,12 @@
   "Unindent a block of text by a specific amount or the smallest common
   indentation size."
   ([text]
-     (unindent text (find-smallest-indent text)))
+   (unindent text (find-smallest-indent text)))
   ([text indent-size]
-     (let [re (re-pattern (str "^\\s{0," indent-size "}"))]
-       (->> (str/split-lines text)
-            (map #(str/replace % re ""))
-            (str/join "\n")))))
+   (let [re (re-pattern (str "^\\s{0," indent-size "}"))]
+     (->> (str/split-lines text)
+          (map #(str/replace % re ""))
+          (str/join "\n")))))
 
 (defn correct-indent [text]
   (if text
@@ -73,7 +73,7 @@
   and a sequence of namespaces to drop. The sequence is returned with
   all namespaces in `exclude` and all namespaces NOT in `include`
   removed."
-  [ns-seq include exclude]
+  [include exclude ns-seq]
   (let [has-name? (fn [names] (comp (symbol-set names) :name))
         ns-seq    (remove (has-name? exclude) ns-seq)]
     (if include
@@ -96,12 +96,12 @@
    source directories. The sequence is returned with :path items added
    in each public var's entry in the :publics map, which indicate the
    path to the source file relative to the repo root."
-  [ns-seq root sources]
+  [root sources ns-seq]
   (let [sources (map #(normalize-path % root) sources)]
     (for [ns ns-seq]
       (assoc ns
-        :publics (map #(assoc % :path (find-file-in-repo (:file %) sources))
-                      (:publics ns))))))
+             :publics (map #(assoc % :path (find-file-in-repo (:file %) sources))
+                           (:publics ns))))))
 
 (defn summary
   "Return the summary of a docstring.

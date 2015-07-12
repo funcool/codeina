@@ -81,16 +81,16 @@
   (str/replace (str path) File/separator "/"))
 
 (defn- var-source-uri
-  [{:keys [src-dir-uri src-uri-mapping src-linenum-anchor-prefix]}
+  [{:keys [src-uri src-uri-mapping src-uri-prefix]}
    {:keys [path file line]}]
   (let [path (uri-path path)
         file (uri-path file)]
-    (str src-dir-uri
+    (str src-uri
          (if-let [mapping-fn (get-mapping-fn src-uri-mapping path)]
            (mapping-fn file)
            path)
-         (if src-linenum-anchor-prefix
-           (str "#" src-linenum-anchor-prefix line)))))
+         (if src-uri-prefix
+           (str src-uri-prefix line)))))
 
 (defn- split-ns [namespace]
   (str/split (str namespace) #"\."))
@@ -242,9 +242,9 @@
      [:div.members
       [:h4 "members"]
       [:div.inner
-       (let [project (dissoc project :src-dir-uri)]
+       (let [project (dissoc project :src-uri)]
          (map (partial var-docs project namespace) members))]])
-   (if (:src-dir-uri project)
+   (if (:src-uri project)
      (if (:path var)
        [:div.src-link (link-to (var-source-uri project var) "view source")]
        (println "Could not generate source link for" (:name var))))])
@@ -274,7 +274,8 @@
   (doseq [dir dirs]
     (.mkdirs (io/file output-dir dir))))
 
-(defn- write-index [output-dir project]
+(defn- write-index
+  [output-dir project]
   (spit (io/file output-dir "index.html") (index-page project)))
 
 (defn- write-namespaces
@@ -286,12 +287,10 @@
 (defn write-docs
   "Take raw documentation info and turn it into formatted HTML."
   [project]
-  (doto (:output-dir project)
-    (mkdirs "css" "js")
+  (doto (:target project)
+    (mkdirs "css")
     (copy-resource "codeina/css/default.css" "css/default.css")
-    (copy-resource "codeina/js/jquery.min.js" "js/jquery.min.js")
-    (copy-resource "codeina/js/page_effects.js" "js/page_effects.js")
     (write-index project)
     (write-namespaces project))
   (println "Generated HTML docs in"
-           (.getAbsolutePath (io/file (:output-dir project)))))
+           (.getAbsolutePath (io/file (:target project)))))
