@@ -7,7 +7,8 @@
 
 (defn- cljs-file? [file]
   (and (.isFile file)
-       (-> file .getName (.endsWith ".cljs"))))
+       (or (-> file .getName (.endsWith ".cljs"))
+           (-> file .getName (.endsWith ".cljc")))))
 
 (defn- strip-parent [parent]
   (let [len (inc (count (.getPath parent)))]
@@ -16,7 +17,8 @@
         (if (>= (count child-name) len)
           (io/file (subs child-name len)))))))
 
-(defn- find-files [file]
+(defn- find-files
+  [file]
   (if (.isDirectory file)
     (->> (file-seq file)
          (filter cljs-file?)
@@ -31,9 +33,9 @@
 
 (defn- var-type [opts]
   (cond
-   (:macro opts)           :macro
-   (:protocol-symbol opts) :protocol
-   :else                   :var))
+    (:macro opts)           :macro
+    (:protocol-symbol opts) :protocol
+    :else                   :var))
 
 (defn- read-var [file vars var]
   (-> var
@@ -66,12 +68,12 @@
   (try
     (let [analysis (analyze-file (io/file path file))]
       (apply merge
-        (for [namespace (keys (::an/namespaces analysis))]
-          {namespace
-           (-> (get-in analysis [::an/namespaces namespace])
-               (assoc :name namespace)
-               (assoc :publics (read-publics analysis namespace file))
-               (update-some :doc correct-indent))})))
+             (for [namespace (keys (::an/namespaces analysis))]
+               {namespace
+                (-> (get-in analysis [::an/namespaces namespace])
+                    (assoc :name namespace)
+                    (assoc :publics (read-publics analysis namespace file))
+                    (update-some :doc correct-indent))})))
     (catch Exception e
       (println
        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
@@ -99,12 +101,12 @@
       :deprecated - the library version the var was deprecated in"
   ([] (read-namespaces "src"))
   ([path]
-     (let [path (io/file path)
-           file-reader (partial read-file path)]
-       (->> (find-files path)
-            (map file-reader)
-            (apply merge)
-            (vals)
-            (sort-by :name))))
+   (let [path (io/file path)
+         file-reader (partial read-file path)]
+     (->> (find-files path)
+          (map file-reader)
+          (apply merge)
+          (vals)
+          (sort-by :name))))
   ([path & paths]
-     (mapcat read-namespaces (cons path paths))))
+   (mapcat read-namespaces (cons path paths))))
