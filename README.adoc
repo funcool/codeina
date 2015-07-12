@@ -10,7 +10,7 @@ Include the following plugin in your project.clj file or your global profile:
 
 [source,clojure]
 ----
-:plugins [[funcool/codeina "0.1.0"
+:plugins [[funcool/codeina "0.2.0"
            :exclusions [org.clojure/clojure]]]
 ----
 
@@ -19,8 +19,7 @@ of your sources and the language:
 
 [source,clojure]
 ----
-:codeina {:sources ["src"]
-          :language :clojure}
+:codeina {:sources ["src"]}
 ----
 
 And run the `doc` lein subcommand:
@@ -31,9 +30,7 @@ $ lein doc
 Generated HTML docs in /path/to/you/project/doc
 ----
 
-
 == Examples
 
-- https://funcool.github.io/buddy-auth/latest/api/
 - https://funcool.github.io/catacumba/latest/api/
 - https://funcool.github.io/cats/latest/api/
