@@ -1,24 +1,28 @@
 (ns codeina.reader.clojure
   "Read raw documentation information from Clojure source directory."
   (:import java.util.jar.JarFile)
-  (:use [codeina.utils :only (assoc-some update-some correct-indent)])
   (:require [clojure.java.io :as io]
-            [clojure.tools.namespace :as ns]
-            [clojure.string :as str]))
+            [clojure.tools.namespace.find :as ns]
+            [clojure.string :as str]
+            [codeina.utils :refer (assoc-some update-some correct-indent)]))
 
-(defn- sorted-public-vars [namespace]
+(defn- sorted-public-vars
+  [namespace]
   (->> (ns-publics namespace)
        (vals)
        (sort-by (comp :name meta))))
 
-(defn- no-doc? [var]
+(defn- no-doc?
+  [var]
   (let [{:keys [skip-wiki no-doc]} (meta var)]
     (or skip-wiki no-doc)))
 
-(defn- proxy? [var]
+(defn- proxy?
+  [var]
   (re-find #"proxy\$" (-> var meta :name str)))
 
-(defn- macro? [var]
+(defn- macro?
+  [var]
   (:macro (meta var)))
 
 (defn- multimethod? [var]
@@ -26,7 +30,9 @@
 
 (defn- protocol? [var]
   (let [value (var-get var)]
-    (and (map? value) (:on-interface value))))
+    (and (map? value)
+         (not (sorted? value)) ; workaround for CLJ-1242
+         (:on-interface value))))
 
 (defn- protocol-method? [vars var]
   (if-let [p (:protocol (meta var))]
