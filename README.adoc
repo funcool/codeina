@@ -19,7 +19,8 @@ of your sources and the language:
 
 [source,clojure]
 ----
-:codeina {:sources ["src"]}
+:codeina {:sources ["src"]
+         :reader :clojurescript}
 ----
 
 And run the `doc` lein subcommand:
