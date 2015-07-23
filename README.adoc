@@ -20,7 +20,7 @@ of your sources and the language:
 [source,clojure]
 ----
 :codeina {:sources ["src"]
-         :reader :clojurescript}
+         :reader :clojure}
 ----
 
 And run the `doc` lein subcommand:
@@ -30,6 +30,40 @@ And run the `doc` lein subcommand:
 $ lein doc
 Generated HTML docs in /path/to/you/project/doc
 ----
+
+== Configuration
+
+This is a complete example that uses all available options:
+
+[source, clojure]
+----
+:codeina {:sources ["src"]
+          :exclude [cats.monad.continuation
+                    cats.monad.reader
+                    cats.monad.writer]
+          :reader :clojure
+          :target "doc/dist/latest/api"
+          :src-uri "http://github.com/funcool/cats/blob/master/"
+          :src-uri-prefix "#L"}
+----
+
+And this is a detailed explanation of possible options:
+
+* `:sources` ->  is a vector of paths that should be analized for extract the docstrings.
+* `:reader` -> is a reader that should be used. Can be `:clojure` and `:clojurescript`.
+* `:exclude` -> is a vector of namespace symbols that should be excluded.
+* `:target` -> the directory when the documentation should be generated.
+* `:src-uri` -> the base uri for the source code location.
+* `:src-uri-prefix` -> additional uri prefix.
+
+
+Additionally to that configuration options, the codeina interprets the metadata attached
+to the code, then, you can granulary exclude some functions from the documentation
+using `^:no-doc` metadata on the function or in entire namespace.
+
+Also, you can use the `^:deprecated` metadata for mark visually in the documentation that
+a function is deprecated.
+
 
 == Examples
 
