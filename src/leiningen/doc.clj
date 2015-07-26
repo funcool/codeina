@@ -19,7 +19,7 @@
                   (project/merge-profiles project [:codeina])
                   project)]
     (eval/eval-in-project
-     (deps/add-if-missing project '[funcool/codeina "0.2.0"])
+     (deps/add-if-missing project '[funcool/codeina "0.3.0-SNAPSHOT"])
      `(codeina.core/generate-docs
        (update-in '~(get-options project) [:src-uri-mapping] eval))
      `(require 'codeina.core))))

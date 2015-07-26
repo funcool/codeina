@@ -2,6 +2,7 @@
   "Read raw documentation information from ClojureScript source directory."
   (:use [codeina.utils :only [assoc-some update-some correct-indent]])
   (:require [clojure.java.io :as io]
+            [cljs.analyzer :as ana]
             [cljs.analyzer.api :as an]
             [cljs.env :as env]
             [clojure.string :as str]))
@@ -66,7 +67,7 @@
 (defn- analyze-file
   "Takes a file and returns then analysis map corresponding to its namespace"
   [file]
-  (binding [an/*analyze-deps* false]
+  (binding [ana/*analyze-deps* false]
     (env/with-compiler-env (an/empty-env)
       (an/no-warn
         (an/analyze-file file) ;; side-effects
