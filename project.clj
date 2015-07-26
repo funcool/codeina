@@ -1,4 +1,4 @@
-(defproject funcool/codeina "0.2.0"
+(defproject funcool/codeina "0.3.0-SNAPSHOT"
   :description "Generate documentation from Clojure source files"
   :url "https://github.com/funcool/codeina"
   :license {:name "Eclipse Public License"
