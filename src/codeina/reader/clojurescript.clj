@@ -2,7 +2,8 @@
   "Read raw documentation information from ClojureScript source directory."
   (:use [codeina.utils :only [assoc-some update-some correct-indent]])
   (:require [clojure.java.io :as io]
-            [cljs.analyzer :as an]
+            [cljs.analyzer.api :as an]
+            [cljs.env :as env]
             [clojure.string :as str]))
 
 (defn- cljs-file? [file]
@@ -41,14 +42,16 @@
   (-> var
       (select-keys [:name :line :arglists :doc :dynamic :added :deprecated :doc/format])
       (update-some :doc correct-indent)
-      (update-some :arglists second)
-      (assoc-some  :file    (.getPath file)
+      (update-some :arglists #(if (= 'quote (first %)) (second %) %))
+      (assoc-some  :file    (cond 
+                              (instance? java.io.File file) (.getPath file)
+                              (string? file) file)
                    :type    (var-type var)
                    :members (map (partial read-var file vars)
                                  (protocol-methods var vars)))))
 
 (defn- namespace-vars [analysis namespace]
-  (->> (get-in analysis [::an/namespaces namespace :defs])
+  (->> (:defs analysis)
        (map (fn [[name opts]] (assoc opts :name name)))))
 
 (defn- read-publics [analysis namespace file]
@@ -60,26 +63,31 @@
          (map (partial read-var file vars))
          (sort-by (comp str/lower-case :name)))))
 
-(defn- analyze-file [file]
+(defn- analyze-file
+  "Takes a file and returns then analysis map corresponding to its namespace"
+  [file]
   (binding [an/*analyze-deps* false]
-    (an/analyze-file file)))
+    (env/with-compiler-env (an/empty-env)
+      (an/no-warn
+        (an/analyze-file file) ;; side-effects
+        (an/find-ns (:ns (an/parse-ns file)))))))
 
 (defn- read-file [path file]
   (try
-    (let [analysis (analyze-file (io/file path file))]
-      (apply merge
-             (for [namespace (keys (::an/namespaces analysis))]
-               {namespace
-                (-> (get-in analysis [::an/namespaces namespace])
-                    (assoc :name namespace)
-                    (assoc :publics (read-publics analysis namespace file))
-                    (update-some :doc correct-indent))})))
+    (let [ns-analysis (analyze-file (io/file path file))
+          ns-name (:name ns-analysis)]
+      {ns-name (-> ns-analysis 
+                   (assoc :name ns-name)
+                   (assoc :publics (read-publics ns-analysis ns-analysis file))
+                   (update-some :doc correct-indent)
+                   (dissoc :use-macros :excludes :requires :imports :uses :defs
+                           :require-macros ::an/constants))})
     (catch Exception e
       (println
-       (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
-               file
-               (.getName (class e))
-               (.getMessage e))))))
+        (format "Could not generate clojurescript documentation for %s - root cause: %s %s"
+                file
+                (.getName (class e))
+                (.getMessage e))))))
 
 (defn read-namespaces
   "Read ClojureScript namespaces from a source directory (defaults to
@@ -90,7 +98,7 @@
     :name   - the name of the namespace
     :doc    - the doc-string on the namespace
     :author - the author of the namespace
-    :publics
+    :publics - a collection of vars, each containing:
       :name       - the name of a public function, macro, or value
       :file       - the file the var was declared in
       :line       - the line at which the var was declared

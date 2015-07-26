@@ -26,13 +26,12 @@
          (remove (comp empty? :publics)))))
 
 (defn- merge-namespaces [namespaces]
-  (for [[name namespaces] (group-by :name namespaces)]
-    (assoc (first namespaces) :publics (mapcat :publics namespaces))))
+  (for [[name nss] (group-by :name namespaces)]
+    (assoc (first nss) :publics (mapcat :publics nss))))
 
 (defn- cljs-read-namespaces
   [& paths]
   (let [reader (resolve-sym 'codeina.reader.clojurescript/read-namespaces)]
-    (println 2222 (apply reader paths))
     (merge-namespaces
      (concat (apply reader paths)
              (apply read-macro-namespaces paths)))))
@@ -76,7 +75,7 @@
          writer-fn (get-writer options)
          reader-fn (get-reader options)
          root (:root options)
-         sources (:sources options)
+         sources (seq (set (:sources options))) ;; Avoid reading twice
          include (:include options)
          exclude (:exclude options)
          namespaces (->> (apply reader-fn sources)
