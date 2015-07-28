@@ -1,10 +1,10 @@
 (ns codeina.reader.clojure
   "Read raw documentation information from Clojure source directory."
-  (:import java.util.jar.JarFile)
   (:require [clojure.java.io :as io]
             [clojure.tools.namespace.find :as ns]
             [clojure.string :as str]
-            [codeina.utils :refer (assoc-some update-some correct-indent)]))
+            [codeina.utils :refer (assoc-some update-some correct-indent)])
+  (:import java.util.jar.JarFile))
 
 (defn- sorted-public-vars
   [namespace]
@@ -13,11 +13,14 @@
        (sort-by (comp :name meta))))
 
 (defn- no-doc?
+  "Return true if a var contains no-doc label."
   [var]
   (let [{:keys [skip-wiki no-doc]} (meta var)]
     (or skip-wiki no-doc)))
 
 (defn- proxy?
+  "Return true if provided var has reference to proxy
+  unstance?"
   [var]
   (re-find #"proxy\$" (-> var meta :name str)))
 
@@ -25,30 +28,36 @@
   [var]
   (:macro (meta var)))
 
-(defn- multimethod? [var]
+(defn- multimethod?
+  [var]
   (instance? clojure.lang.MultiFn (var-get var)))
 
-(defn- protocol? [var]
+(defn- protocol?
+  [var]
   (let [value (var-get var)]
     (and (map? value)
          (not (sorted? value)) ; workaround for CLJ-1242
          (:on-interface value))))
 
-(defn- protocol-method? [vars var]
+(defn- protocol-method?
+  [vars var]
   (if-let [p (:protocol (meta var))]
     (some #{p} vars)))
 
-(defn- protocol-methods [protocol vars]
+(defn- protocol-methods
+  [protocol vars]
   (filter #(= protocol (:protocol (meta %))) vars))
 
-(defn- var-type [var]
+(defn- var-type
+  [var]
   (cond
-   (macro? var)       :macro
-   (multimethod? var) :multimethod
-   (protocol? var)    :protocol
-   :else              :var))
+    (macro? var)       :macro
+    (multimethod? var) :multimethod
+    (protocol? var)    :protocol
+    :else              :var))
 
-(defn- read-var [vars var]
+(defn- read-var
+  [vars var]
   (-> (meta var)
       (select-keys [:name :file :line :arglists :doc :dynamic
                     :added :deprecated :doc/format])
@@ -57,7 +66,8 @@
                    :members (seq (map (partial read-var vars)
                                       (protocol-methods var vars))))))
 
-(defn- read-publics [namespace]
+(defn- read-publics
+  [namespace]
   (let [vars (sorted-public-vars namespace)]
     (->> vars
          (remove proxy?)
@@ -66,7 +76,8 @@
          (map (partial read-var vars))
          (sort-by (comp str/lower-case :name)))))
 
-(defn- read-ns [namespace]
+(defn- read-ns
+  [namespace]
   (try
     (require namespace)
     (-> (find-ns namespace)
@@ -82,11 +93,14 @@
                (.getName (class e))
                (.getMessage e))))))
 
-(defn- jar-file? [file]
-  (and (.isFile file)
-       (-> file .getName (.endsWith ".jar"))))
+(defn- jar-file?
+  [file]
+  (and
+   (.isFile file)
+   (-> file .getName (.endsWith ".jar"))))
 
-(defn- find-namespaces [file]
+(defn- find-namespaces
+  [file]
   (cond
     (.isDirectory file) (ns/find-namespaces-in-dir file)
     (jar-file? file)    (ns/find-namespaces-in-jarfile (JarFile. file))))
@@ -113,9 +127,9 @@
       :deprecated - the library version the var was deprecated in"
   ([] (read-namespaces "src"))
   ([path]
-     (->> (io/file path)
-          (find-namespaces)
-          (mapcat read-ns)
-          (remove :no-doc)))
+   (->> (io/file path)
+        (find-namespaces)
+        (mapcat read-ns)
+        (remove :no-doc)))
   ([path & paths]
-     (mapcat read-namespaces (cons path paths))))
+   (mapcat read-namespaces (cons path paths))))
