@@ -6,7 +6,7 @@
   :source-paths ["src"]
   :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "0.0-3308"]
+                 [org.clojure/clojurescript "1.7.107"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [leinjacker "0.4.2"]
                  [hiccup "1.0.5"]
