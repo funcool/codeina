@@ -1,6 +1,6 @@
 = Codeína
 
-A tool for generate beatiful api documentation for clojure and clojurescript.
+A tool for generate beautiful api documentation for clojure and clojurescript.
 
 This is a codox fork with various structural changes and new look.
 
