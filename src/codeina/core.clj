@@ -7,10 +7,7 @@
   it and return the underlying value."
   [s]
   (let [ns-part (symbol (namespace s))]
-    (try
-      (require ns-part)
-      (catch Exception e
-        (throw (Exception. (str "Could not load codeina writer " s) e))))
+    (require ns-part)
     (if-let [value (resolve s)]
       value
       (throw (Exception. (str "Could not resolve codeina writer " s))))))
