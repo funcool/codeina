@@ -10,7 +10,7 @@ Include the following plugin in your project.clj file or your global profile:
 
 [source,clojure]
 ----
-:plugins [[funcool/codeina "0.4.0"
+:plugins [[funcool/codeina "0.5.0"
            :exclusions [org.clojure/clojure]]]
 ----
 
